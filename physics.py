@@ -1,4 +1,5 @@
 g = 9.81
+base_atmospheric_pressure = 101325
 
 
 def calculate_buoyancy(V, density_fluid):
@@ -32,5 +33,5 @@ def calculate_pressure(depth):
     """
     if depth <= 0:
         raise ValueError("Depth must be positive value.")
-    pressure = 1000 * g * depth
+    pressure = 1000 * g * depth + base_atmospheric_pressure
     return pressure
