@@ -27,6 +27,34 @@ class TestPhysics(unittest.TestCase):
         with self.assertRaises(ValueError):
             physics.calculate_pressure(-1)
 
+    def test_calculate_acceleration(self):
+        self.assertEqual(physics.calculate_acceleration(100, 10), 10)
+        self.assertNotEqual(physics.calculate_acceleration(150, 30), 6)
+
+        with self.assertRaises(ValueError):
+            physics.calculate_acceleration(50, -3)
+
+    def test_calculate_angular_acceleration(self):
+        self.assertEqual(physics.calculate_angular_acceleration(50, 25), 2)
+        self.assertNotEqual(physics.calculate_angular_acceleration(60, 30), 3)
+
+        with self.assertRaises(ValueError):
+            physics.calculate_angular_acceleration(30, -3)
+
+    def test_calculate_torque(self):
+        self.assertEqual(round(physics.calculate_torque(30, 45, 5), 3), 106.066)
+        self.assertNotEqual(physics.calculate_torque(60, 30, 4), 100)
+
+        with self.assertRaises(ValueError):
+            physics.calculate_torque(-50, -3, 3)
+
+    def test_calculate_moment_of_inertia(self):
+        self.assertEqual(physics.calculate_moment_of_inertia(4, 4), 64)
+        self.assertNotEqual(physics.calculate_moment_of_inertia(6, 4), 200)
+
+        with self.assertRaises(ValueError):
+            physics.calculate_moment_of_inertia(-30, -3)
+
 
 if __name__ == "__main__":
     unittest.main()
