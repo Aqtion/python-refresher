@@ -97,7 +97,9 @@ def calculate_moment_of_inertia(m, r):
     return moment_of_inertia
 
 
-def calculate_auv_acceleration(F_magnitude, mass):
+def calculate_auv_acceleration(
+    F_magnitude, F_angle=30, mass=100, volume=0.1, thruster_distance=0.5
+):
     """
     Calculates acceleration of AUV given magnitude of force exerted by thruster and mass of AUV.
 
@@ -129,10 +131,18 @@ def calculate_auv_angular_acceleration(
     return auv_angular_acceleration
 
 
-def calculate_auv2_acceleration(T, alpha, mass=100):
-    cos_angle = math.cos(math.radians(alpha))
-    sin_angle = math.sin(math.radians(alpha))
-    rotation_matrix = np.array(
+def calculate_auv2_acceleration(T, alpha, theta, mass=100):
+    """
+    Calculates linear acceleration of AUV given magnitude of force exerted by all 4 thrusters, their angles, and mass of AUV.
+
+    T - Forces exerted by each of the 4 thrusters
+    alpha - Angle of each thruster
+    theta - Rotation of AUV
+    mass - Mass of AUV
+    """
+    cos_angle = math.cos(alpha)
+    sin_angle = math.sin(alpha)
+    signs_matrix = np.array(
         [
             cos_angle,
             cos_angle,
@@ -144,19 +154,33 @@ def calculate_auv2_acceleration(T, alpha, mass=100):
             sin_angle,
         ],
     ).reshape(2, 4)
-    forces_matrix = np.dot(rotation_matrix, T)
-    acceleration_matrix = np.divide(forces_matrix, mass)
+    forces_matrix = np.dot(signs_matrix, T)
+    print(forces_matrix)
+    cos_theta = math.cos(theta)
+    sin_theta = math.sin(theta)
+    rotation_matrix = np.array([cos_theta, -sin_theta, sin_theta, cos_theta]).reshape(
+        2, 2
+    )
+
+    acceleration_matrix = np.divide(np.dot(rotation_matrix, forces_matrix), mass)
+
     return acceleration_matrix
 
 
 def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
+    """
+    Calculates angular acceleration of AUV given magnitude of force exerted by thrusters, angle of thrusters, and dimensions of AUV.
+
+    T - Magnitude of force exerted by thruster
+    F_angle - Angle of thruster exerting force on AUV
+    """
     net_torque = 0
     for i in range(4):
-        sin_angle = math.sin(math.radians(alpha))
-        cos_angle = math.cos(math.radians(alpha))
-        if i == 0 or i == 2:
-            net_torque += T[i] * (sin_angle * L + cos_angle * l)
-        else:
+        sin_angle = math.sin(alpha)
+        cos_angle = math.cos(alpha)
+        if i % 2:
             net_torque -= T[i] * (sin_angle * L + cos_angle * l)
+        else:
+            net_torque += T[i] * (sin_angle * L + cos_angle * l)
     angular_acceleration = net_torque / inertia
     return angular_acceleration
