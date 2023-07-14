@@ -55,6 +55,20 @@ class TestPhysics(unittest.TestCase):
         with self.assertRaises(ValueError):
             physics.calculate_moment_of_inertia(-30, -3)
 
+    def test_calculate_auv_acceleration(self):
+        self.assertEqual(physics.calculate_auv_acceleration(30, 5), 6)
+        self.assertNotEqual(physics.calculate_auv_acceleration(40, 8), 7)
+
+        with self.assertRaises(ValueError):
+            physics.calculate_auv_acceleration(-30, -3)
+
+    def test_calculate_auv_angular_acceleration(self):
+        self.assertEqual(round(physics.calculate_auv_angular_acceleration(60, 30)), 15)
+        self.assertNotEqual(physics.calculate_auv_angular_acceleration(70, 3), 11)
+
+        with self.assertRaises(ValueError):
+            physics.calculate_auv_angular_acceleration(-30, -3)
+
 
 if __name__ == "__main__":
     unittest.main()

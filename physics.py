@@ -97,6 +97,12 @@ def calculate_moment_of_inertia(m, r):
 
 
 def calculate_auv_acceleration(F_magnitude, mass):
+    """
+    Calculates acceleration of AUV given magnitude of force exerted by thruster and mass of AUV.
+
+    F_magnitude - Magnitude of force exerted by thruster
+    mass - mass of AUV
+    """
     if F_magnitude < 0 or mass <= 0:
         raise ValueError(
             "Magnitude of force must be positive and mass must be positive."
@@ -106,7 +112,17 @@ def calculate_auv_acceleration(F_magnitude, mass):
 
 
 def calculate_auv_angular_acceleration(
-    F_magnitude, F_angle, mass=100, volume=0.1, thruster_distance=0.5
+    F_magnitude, F_angle, inertia=1, thruster_distance=0.5
 ):
+    """
+    Calculates angular acceleration of AUV given magnitude of force exerted by thruster and angle of force respective to center of mass.
+
+    F_magnitude - Magnitude of force exerted by thruster
+    F_angle - Angle of thruster exerting force on AUV
+    """
     if F_magnitude < 0:
         raise ValueError("Magnitude of force must be positive.")
+    torque = F_magnitude * math.sin(math.radians(F_angle)) * thruster_distance
+    print(torque)
+    auv_angular_acceleration = torque / inertia
+    return auv_angular_acceleration
