@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 g = 9.81
 base_atmospheric_pressure = 101325
@@ -126,3 +127,31 @@ def calculate_auv_angular_acceleration(
     print(torque)
     auv_angular_acceleration = torque / inertia
     return auv_angular_acceleration
+
+
+def calculate_auv2_acceleration(T, alpha, mass=100):
+    cos_angle = math.cos(math.radians(alpha))
+    sin_angle = math.sin(math.radians(alpha))
+    rotation_matrix = np.array(
+        [
+            cos_angle,
+            cos_angle,
+            -cos_angle,
+            -cos_angle,
+            sin_angle,
+            -sin_angle,
+            -sin_angle,
+            sin_angle,
+        ],
+    ).reshape(2, 4)
+    forces_matrix = np.dot(rotation_matrix, T)
+    acceleration_matrix = np.divide(forces_matrix, mass)
+    return acceleration_matrix
+
+
+def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia):
+    pass
+
+
+T = np.array([30, 50, 70, 20]).reshape(4, 1)
+print(calculate_auv2_acceleration(T, 30))
