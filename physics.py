@@ -149,9 +149,14 @@ def calculate_auv2_acceleration(T, alpha, mass=100):
     return acceleration_matrix
 
 
-def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia):
-    pass
-
-
-T = np.array([30, 50, 70, 20]).reshape(4, 1)
-print(calculate_auv2_acceleration(T, 30))
+def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
+    net_torque = 0
+    for i in range(4):
+        sin_angle = math.sin(math.radians(alpha))
+        cos_angle = math.cos(math.radians(alpha))
+        if i == 0 or i == 2:
+            net_torque += T[i] * (sin_angle * L + cos_angle * l)
+        else:
+            net_torque -= T[i] * (sin_angle * L + cos_angle * l)
+    angular_acceleration = net_torque / inertia
+    return angular_acceleration
