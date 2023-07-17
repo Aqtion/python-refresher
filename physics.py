@@ -137,8 +137,7 @@ def calculate_auv_angular_acceleration(
     if F_magnitude < 0:
         raise ValueError("Magnitude of force must be positive.")
     torque = F_magnitude * np.sin(np.radians(F_angle)) * thruster_distance
-    print(torque)
-    auv_angular_acceleration = torque / inertia
+    auv_angular_acceleration = calculate_angular_acceleration(torque, inertia)
     return auv_angular_acceleration
 
 
@@ -166,7 +165,6 @@ def calculate_auv2_acceleration(T, alpha, theta, mass=100):
         ],
     ).reshape(2, 4)
     forces_matrix = np.dot(signs_matrix, T)
-    # print(forces_matrix)
     cos_theta = np.cos(theta)
     sin_theta = np.sin(theta)
     rotation_matrix = np.array([cos_theta, -sin_theta, sin_theta, cos_theta]).reshape(
@@ -196,8 +194,5 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
             net_torque -= T[i] * (sin_angle * L + cos_angle * l)
         else:
             net_torque += T[i] * (sin_angle * L + cos_angle * l)
-    angular_acceleration = net_torque / inertia
+    angular_acceleration = calculate_angular_acceleration(net_torque, inertia)
     return angular_acceleration
-
-
-print(calculate_auv2_acceleration([2, 4, 8, 6], np.pi / 4, np.pi / 6, 1))
