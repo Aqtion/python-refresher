@@ -1,6 +1,5 @@
 import physics
 import unittest
-import math
 import numpy as np
 
 
@@ -85,32 +84,28 @@ class TestPhysics(unittest.TestCase):
         self.assertTrue(
             np.allclose(
                 physics.calculate_auv2_acceleration(
-                    [2, 4, 8, 6], math.pi / 4, math.pi / 6, 1
+                    [2, 4, 8, 6], np.pi / 4, np.pi / 6, 1
                 ),
-                [math.sqrt(2) - 2 * math.sqrt(6), -2 * math.sqrt(2) - math.sqrt(6)],
+                [np.sqrt(2) - 2 * np.sqrt(6), -2 * np.sqrt(2) - np.sqrt(6)],
             )
         )
         self.assertFalse(
             np.allclose(
                 physics.calculate_auv2_acceleration(
-                    [2, 4, 5, 3], math.pi / 6, math.pi / 4, 1
+                    [2, 4, 5, 3], np.pi / 6, np.pi / 4, 1
                 ),
-                [math.sqrt(5) - 3 * math.sqrt(8), -2 * math.sqrt(3) - math.sqrt(7)],
+                [np.sqrt(5) - 3 * np.sqrt(8), -2 * np.sqrt(3) - np.sqrt(7)],
             )
         )
 
     def test_calculate_auv2_angular_acceleration(self):
         self.assertAlmostEqual(
-            physics.calculate_auv2_angular_acceleration(
-                [1, 3, 1, 3], math.pi / 4, 3, 2
-            ),
+            physics.calculate_auv2_angular_acceleration([1, 3, 1, 3], np.pi / 4, 3, 2),
             0.14142135623,
         )
 
         self.assertNotAlmostEqual(
-            physics.calculate_auv2_angular_acceleration(
-                [4, 3, 1, 5], math.pi / 6, 1, 2
-            ),
+            physics.calculate_auv2_angular_acceleration([4, 3, 1, 5], np.pi / 6, 1, 2),
             0.54989483488,
         )
 

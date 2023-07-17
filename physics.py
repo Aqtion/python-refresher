@@ -1,4 +1,3 @@
-import math
 import numpy as np
 
 g = 9.81
@@ -78,7 +77,7 @@ def calculate_torque(F_magnitude, F_direction, r):
         raise ValueError(
             "Magnitude of force and distance to center of mass must be positive"
         )
-    torque = F_magnitude * math.sin(math.radians(F_direction)) * r
+    torque = F_magnitude * np.sin(np.radians(F_direction)) * r
     return torque
 
 
@@ -112,8 +111,8 @@ def calculate_auv_acceleration(
         )
     auv_acceleration = np.array(
         [
-            F_magnitude * math.cos(math.radians(F_angle)) / mass,
-            F_magnitude * math.sin(math.radians(F_angle)) / mass,
+            F_magnitude * np.cos(np.radians(F_angle)) / mass,
+            F_magnitude * np.sin(np.radians(F_angle)) / mass,
         ],
         dtype=float,
     )
@@ -131,7 +130,7 @@ def calculate_auv_angular_acceleration(
     """
     if F_magnitude < 0:
         raise ValueError("Magnitude of force must be positive.")
-    torque = F_magnitude * math.sin(math.radians(F_angle)) * thruster_distance
+    torque = F_magnitude * np.sin(np.radians(F_angle)) * thruster_distance
     print(torque)
     auv_angular_acceleration = torque / inertia
     return auv_angular_acceleration
@@ -146,8 +145,8 @@ def calculate_auv2_acceleration(T, alpha, theta, mass=100):
     theta - Rotation of AUV
     mass - Mass of AUV
     """
-    cos_angle = math.cos(alpha)
-    sin_angle = math.sin(alpha)
+    cos_angle = np.cos(alpha)
+    sin_angle = np.sin(alpha)
     signs_matrix = np.array(
         [
             cos_angle,
@@ -162,8 +161,8 @@ def calculate_auv2_acceleration(T, alpha, theta, mass=100):
     ).reshape(2, 4)
     forces_matrix = np.dot(signs_matrix, T)
     # print(forces_matrix)
-    cos_theta = math.cos(theta)
-    sin_theta = math.sin(theta)
+    cos_theta = np.cos(theta)
+    sin_theta = np.sin(theta)
     rotation_matrix = np.array([cos_theta, -sin_theta, sin_theta, cos_theta]).reshape(
         2, 2
     )
@@ -182,8 +181,8 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
     """
     net_torque = 0
     for i in range(4):
-        sin_angle = math.sin(alpha)
-        cos_angle = math.cos(alpha)
+        sin_angle = np.sin(alpha)
+        cos_angle = np.cos(alpha)
         if i % 2 == 0:
             net_torque -= T[i] * (sin_angle * L + cos_angle * l)
         else:
@@ -192,4 +191,4 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
     return angular_acceleration
 
 
-print(calculate_auv2_acceleration([2, 4, 8, 6], math.pi / 4, math.pi / 6, 1))
+print(calculate_auv2_acceleration([2, 4, 8, 6], np.pi / 4, np.pi / 6, 1))
