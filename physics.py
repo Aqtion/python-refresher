@@ -201,8 +201,8 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
         sin_angle = np.sin(alpha)
         cos_angle = np.cos(alpha)
         if i % 2 == 0:
-            net_torque -= T[i] * (sin_angle * L + cos_angle * l)
-        else:
             net_torque += T[i] * (sin_angle * L + cos_angle * l)
+        else:
+            net_torque -= T[i] * (sin_angle * L + cos_angle * l)
     angular_acceleration = calculate_angular_acceleration(net_torque, inertia)
     return angular_acceleration
