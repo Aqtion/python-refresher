@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 g = 9.81
 base_atmospheric_pressure = 101325
@@ -214,3 +215,73 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
 
     angular_acceleration = calculate_angular_acceleration(net_torque, inertia)
     return angular_acceleration
+
+
+def simulate_auv2_motion(
+    T, alpha, L, l, mass=100, inertia=100, dt=0.1, t_final=10, x0=0, y0=0, theta0=0
+) -> tuple:
+    """
+    Simulates the motion of the AUV in a 2D plane.
+
+    Arguments:
+    T: an np.ndarray of the magnitudes of the forces applied by the thrusters in Newtons.
+    alpha: the angle of the thrusters in radians.
+    L: the distance from the center of mass of the AUV to the thrusters in meters.
+    l: the distance from the center of mass of the AUV to the thrusters in meters.
+    inertia (optional): the moment of inertia of the AUV
+    dt (optional): the time step of the simulation in seconds.
+    t_final (optional): the final time of the simulation in seconds
+    x0 (optional): the initial x-position of the AUV in meters.
+    y0 (optional): the initial y-position of the AUV in meters.
+    theta0 (optional): the initial angle of the AUV in radians
+    """
+    t = np.arange(0, t_final, dt)
+    x = np.zeros_like(t)
+    y = np.zeros_like(t)
+    v_x = np.zeros_like(t)
+    v_y = np.zeros_like(t)
+    a_x = np.zeros_like(t)
+    a_y = np.zeros_like(t)
+    omega = np.zeros_like(t)
+    theta = np.zeros_like(t)
+
+    x[0] = x0
+    y[0] = y0
+
+    theta[0] = theta0
+
+    a_x[0] = calculate_auv2_acceleration(T, alpha, theta0)[0]
+    a_y[0] = calculate_auv2_acceleration(T, alpha, theta0)[1]
+
+    for i in range(1, len(t)):
+        time_step = t[i] - t[i - 1]
+        omega[i] = (
+            calculate_auv2_angular_acceleration(T, alpha, L, l, inertia)
+        ) / time_step
+
+        delta_theta0 = (omega[i] - omega[i - 1]) / time_step
+        theta[i] = theta[i - 1] + delta_theta0
+
+        a_x[i] = calculate_auv2_acceleration(T, alpha, theta[i])[0]
+        a_y[i] = calculate_auv2_acceleration(T, alpha, theta[i])[1]
+
+        v_x[i] = a_x[i] * time_step + v_x[i - 1]
+        v_y[i] = a_y[i] * time_step + v_y[i - 1]
+
+        x[i] = v_x[i] * time_step + x[i - 1]
+        y[i] = v_y[i] * time_step + y[i - 1]
+
+    v = np.array([])
+    a = np.array([])
+    for i in range(len(t)):
+        np.append(v, np.array([[v_x[i], v_y[i]]]).reshape(2, 1))
+        np.append(a, np.array([[a_x[i], a_y[i]]]).reshape(2, 1))
+
+    return [t, x, y, theta, v, omega, a]
+
+
+def plot_auv2_motion(auv_motion):
+    plt.plot(auv_motion[0], auv_motion[1], label="X-Position")
+    plt.xlabel("Time (s)")
+    plt.ylabel("X-Position (m)")
+    plt.show()
