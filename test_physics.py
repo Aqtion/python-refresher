@@ -108,7 +108,7 @@ class TestPhysics(unittest.TestCase):
 
         self.assertNotAlmostEqual(
             physics.calculate_auv2_angular_acceleration([4, 3, 1, 5], np.pi / 6, 1, 2),
-            0.54989483488,
+            np.sqrt(2) - np.sqrt(3) * 3,
         )
 
         with self.assertRaises(ValueError):

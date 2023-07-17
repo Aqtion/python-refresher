@@ -196,13 +196,21 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
         raise ValueError("Moment of inertia must be positive.")
     if L <= 0 or l <= 0:
         raise ValueError("Dimensions of AUV must be positive")
-    net_torque = 0
-    for i in range(4):
-        sin_angle = np.sin(alpha)
-        cos_angle = np.cos(alpha)
-        if i % 2 == 0:
-            net_torque += T[i] * (sin_angle * L + cos_angle * l)
-        else:
-            net_torque -= T[i] * (sin_angle * L + cos_angle * l)
+
+    sin_angle = np.sin(alpha)
+    cos_angle = np.cos(alpha)
+
+    T = np.array([T])
+    net_torque = np.sum(
+        np.dot(T, np.array([[1, -1, 1, -1]]).T) * (sin_angle * L + cos_angle * l)
+    )
+    # for i in range(4):
+    #     sin_angle = np.sin(alpha)
+    #     cos_angle = np.cos(alpha)
+    #     if i % 2 == 0:
+    #         net_torque += T[i] * (sin_angle * L + cos_angle * l)
+    #     else:
+    #         net_torque -= T[i] * (sin_angle * L + cos_angle * l)
+
     angular_acceleration = calculate_angular_acceleration(net_torque, inertia)
     return angular_acceleration
