@@ -235,6 +235,10 @@ def simulate_auv2_motion(
     y0 (optional): the initial y-position of the AUV in meters.
     theta0 (optional): the initial angle of the AUV in radians
     """
+    if len(T) != 4:
+        raise ValueError("Must be exactly 4 thrusters present.")
+    if L <= 0 or l <= 0:
+        raise ValueError("Dimensions must be positive.")
     t = np.arange(0, t_final, dt)
     x = np.zeros_like(t)
     y = np.zeros_like(t)
@@ -269,14 +273,23 @@ def simulate_auv2_motion(
         x[i] = v_x[i - 1] * dt + x[i - 1]
         y[i] = v_y[i - 1] * dt + y[i - 1]
 
-    v = np.array([])
-    a = np.array([])
+    v = []
+    a = []
     for i in range(len(t)):
-        np.append(v, np.array([[v_x[i], v_y[i]]]).reshape(2, 1))
-        np.append(a, np.array([[a_x[i], a_y[i]]]).reshape(2, 1))
+        v.append([v_x[i], v_y[i]])
+        a.append([a_x[i], a_y[i]])
 
-    print(x)
-    print(y)
+    # print(t)
+    # print(x)
+    # print(y)
+    # print(theta)
+    # print(v_x)
+    # print(v_y)
+    # print(v)
+    # print(omega)
+    # print(a_x)
+    # print(a_y)
+    print(a)
     return (t, x, y, theta, v, omega, a)
 
 
@@ -285,3 +298,7 @@ def plot_auv2_motion(auv_motion):
     plt.xlabel("Time (s)")
     plt.ylabel("X-Position (m)")
     plt.show()
+
+
+tup = simulate_auv2_motion([40, 80, 120, 160], np.pi / 3, 3, 2, 100, 100, 0.1, 0.4)
+# print(np.array(tup[2]))

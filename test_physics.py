@@ -97,6 +97,7 @@ class TestPhysics(unittest.TestCase):
                 [np.sqrt(5) - 3 * np.sqrt(8), -2 * np.sqrt(3) - np.sqrt(7)],
             )
         )
+
         with self.assertRaises(ValueError):
             physics.calculate_auv2_acceleration([2, 3, 4, 5, 6], 2, 3, -3)
 
@@ -117,7 +118,54 @@ class TestPhysics(unittest.TestCase):
             )
 
     def test_simulate_auv2_motion(self):
-        self.assert
+        tup = physics.simulate_auv2_motion(
+            [40, 80, 120, 160], np.pi / 3, 3, 2, 100, 100, 0.1, 0.4
+        )
+
+        self.assertTrue(
+            np.allclose(
+                np.array(tup[0]),
+                [0.0, 0.1, 0.2, 0.3],
+            )
+        )
+        self.assertTrue(
+            np.allclose(
+                np.array(tup[1]),
+                [0.0, 0.0, -0.008, -0.024],
+            )
+        )
+        self.assertTrue(np.allclose(np.array(tup[2]), [0.0, 0.0, 0.0, 0.0]))
+        self.assertTrue(
+            np.allclose(np.array(tup[3]), [0.0, 0.0, -0.02878461, -0.08635383])
+        )
+        self.assertTrue(
+            np.allclose(
+                np.array(tup[4]),
+                [
+                    [0.0, 0.0],
+                    [-0.08000000000000003, 0.0],
+                    [-0.16000000000000006, 0.0],
+                    [-0.2400000000000001, 0.0],
+                ],
+            ),
+        )
+        self.assertTrue(
+            np.allclose(np.array(tup[5]), [0.0, -0.2878461, -0.57569219, -0.86353829])
+        )
+        self.assertTrue(
+            np.allclose(
+                np.array(tup[6]),
+                [
+                    [-0.8000000000000003, 0.0],
+                    [-0.8000000000000003, 0.0],
+                    [-0.8000000000000003, 0.0],
+                    [-0.7996686013807245, 0.023024507938203508],
+                ],
+            )
+        )
+        with self.assertRaises(ValueError):
+            physics.simulate_auv2_motion([3, 4, 5, 6, 5], 3, -3, -3)
+
 
 if __name__ == "__main__":
     unittest.main()
