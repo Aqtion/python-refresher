@@ -110,7 +110,13 @@ def calculate_auv_acceleration(
         raise ValueError(
             "Magnitude of force must be positive and mass must be positive."
         )
-    auv_acceleration = F_magnitude / mass
+    auv_acceleration = np.array(
+        [
+            F_magnitude * math.cos(math.radians(F_angle)) / mass,
+            F_magnitude * math.sin(math.radians(F_angle)) / mass,
+        ],
+        dtype=float,
+    )
     return auv_acceleration
 
 
@@ -155,7 +161,7 @@ def calculate_auv2_acceleration(T, alpha, theta, mass=100):
         ],
     ).reshape(2, 4)
     forces_matrix = np.dot(signs_matrix, T)
-    print(forces_matrix)
+    # print(forces_matrix)
     cos_theta = math.cos(theta)
     sin_theta = math.sin(theta)
     rotation_matrix = np.array([cos_theta, -sin_theta, sin_theta, cos_theta]).reshape(
@@ -178,9 +184,12 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
     for i in range(4):
         sin_angle = math.sin(alpha)
         cos_angle = math.cos(alpha)
-        if i % 2:
+        if i % 2 == 0:
             net_torque -= T[i] * (sin_angle * L + cos_angle * l)
         else:
             net_torque += T[i] * (sin_angle * L + cos_angle * l)
     angular_acceleration = net_torque / inertia
     return angular_acceleration
+
+
+print(calculate_auv2_acceleration([2, 4, 8, 6], math.pi / 4, math.pi / 6, 1))
