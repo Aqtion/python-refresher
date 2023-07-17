@@ -150,6 +150,10 @@ def calculate_auv2_acceleration(T, alpha, theta, mass=100):
     theta - Rotation of AUV |
     mass - Mass of AUV
     """
+    if len(T) != 4:
+        raise ValueError("Must be exactly 4 thrusters present.")
+    if mass <= 0:
+        raise ValueError("Mass must be positive.")
     cos_angle = np.cos(alpha)
     sin_angle = np.sin(alpha)
     signs_matrix = np.array(
@@ -171,7 +175,7 @@ def calculate_auv2_acceleration(T, alpha, theta, mass=100):
         2, 2
     )
 
-    acceleration_matrix = np.divide(np.dot(rotation_matrix, forces_matrix), mass)
+    acceleration_matrix = np.dot(rotation_matrix, forces_matrix) / mass
 
     return acceleration_matrix
 
@@ -186,6 +190,12 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
     l - half of the width of the AUV |
     inertia - (optional), moment of inertia of AUV
     """
+    if len(T) != 4:
+        raise ValueError("Must be exactly 4 thrusters present.")
+    if inertia <= 0:
+        raise ValueError("Moment of inertia must be positive.")
+    if L <= 0 or l <= 0:
+        raise ValueError("Dimensions of AUV must be positive")
     net_torque = 0
     for i in range(4):
         sin_angle = np.sin(alpha)

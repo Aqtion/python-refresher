@@ -97,6 +97,8 @@ class TestPhysics(unittest.TestCase):
                 [np.sqrt(5) - 3 * np.sqrt(8), -2 * np.sqrt(3) - np.sqrt(7)],
             )
         )
+        with self.assertRaises(ValueError):
+            physics.calculate_auv2_acceleration([2, 3, 4, 5, 6], 2, 3, -3)
 
     def test_calculate_auv2_angular_acceleration(self):
         self.assertAlmostEqual(
@@ -108,6 +110,11 @@ class TestPhysics(unittest.TestCase):
             physics.calculate_auv2_angular_acceleration([4, 3, 1, 5], np.pi / 6, 1, 2),
             0.54989483488,
         )
+
+        with self.assertRaises(ValueError):
+            physics.calculate_auv2_angular_acceleration(
+                [3, 34, 34, 4, 3], 3, -3, -2, -5
+            )
 
 
 if __name__ == "__main__":
