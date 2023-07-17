@@ -254,22 +254,20 @@ def simulate_auv2_motion(
     a_y[0] = calculate_auv2_acceleration(T, alpha, theta0)[1]
 
     for i in range(1, len(t)):
-        time_step = t[i] - t[i - 1]
         omega[i] = (
             calculate_auv2_angular_acceleration(T, alpha, L, l, inertia)
-        ) / time_step
+        ) * dt + omega[i - 1]
 
-        delta_theta0 = (omega[i] - omega[i - 1]) / time_step
-        theta[i] = theta[i - 1] + delta_theta0
+        theta[i] = theta[i - 1] + omega[i - 1] * dt
 
-        a_x[i] = calculate_auv2_acceleration(T, alpha, theta[i])[0]
-        a_y[i] = calculate_auv2_acceleration(T, alpha, theta[i])[1]
+        a_x[i] = calculate_auv2_acceleration(T, alpha, theta[i - 1])[0]
+        a_y[i] = calculate_auv2_acceleration(T, alpha, theta[i - 1])[1]
 
-        v_x[i] = a_x[i] * time_step + v_x[i - 1]
-        v_y[i] = a_y[i] * time_step + v_y[i - 1]
+        v_x[i] = a_x[i - 1] * dt + v_x[i - 1]
+        v_y[i] = a_y[i - 1] * dt + v_y[i - 1]
 
-        x[i] = v_x[i] * time_step + x[i - 1]
-        y[i] = v_y[i] * time_step + y[i - 1]
+        x[i] = v_x[i - 1] * dt + x[i - 1]
+        y[i] = v_y[i - 1] * dt + y[i - 1]
 
     v = np.array([])
     a = np.array([])
@@ -277,7 +275,9 @@ def simulate_auv2_motion(
         np.append(v, np.array([[v_x[i], v_y[i]]]).reshape(2, 1))
         np.append(a, np.array([[a_x[i], a_y[i]]]).reshape(2, 1))
 
-    return [t, x, y, theta, v, omega, a]
+    print(x)
+    print(y)
+    return (t, x, y, theta, v, omega, a)
 
 
 def plot_auv2_motion(auv_motion):

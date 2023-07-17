@@ -116,6 +116,8 @@ class TestPhysics(unittest.TestCase):
                 [3, 34, 34, 4, 3], 3, -3, -2, -5
             )
 
+    def test_simulate_auv2_motion(self):
+        self.assert
 
 if __name__ == "__main__":
     unittest.main()
