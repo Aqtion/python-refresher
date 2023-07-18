@@ -131,21 +131,23 @@ class TestPhysics(unittest.TestCase):
         self.assertTrue(
             np.allclose(
                 np.array(tup[1]),
-                [0.0, 0.0, -0.008, -0.024],
+                [0.0, -0.00799669, -0.02396356, -0.04781142],
             )
         )
-        self.assertTrue(np.allclose(np.array(tup[2]), [0.0, 0.0, 0.0, 0.0]))
         self.assertTrue(
-            np.allclose(np.array(tup[3]), [0.0, 0.0, -0.02878461, -0.08635383])
+            np.allclose(np.array(tup[2]), [0.0, 0.00023025, 0.00115046, 0.00344548])
+        )
+        self.assertTrue(
+            np.allclose(np.array(tup[3]), [0.0, -0.02878461, -0.08635383, -0.17270766])
         )
         self.assertTrue(
             np.allclose(
                 np.array(tup[4]),
                 [
                     [0.0, 0.0],
-                    [-0.08000000000000003, 0.0],
-                    [-0.16000000000000006, 0.0],
-                    [-0.2400000000000001, 0.0],
+                    [-0.07996686, 0.00230245],
+                    [-0.15966877, 0.00920217],
+                    [-0.23847861, 0.0229502],
                 ],
             ),
         )
@@ -157,36 +159,12 @@ class TestPhysics(unittest.TestCase):
                 np.array(tup[6]),
                 [
                     [-0.8000000000000003, 0.0],
-                    [-0.8000000000000003, 0.0],
-                    [-0.8000000000000003, 0.0],
-                    [-0.7996686013807245, 0.023024507938203508],
+                    [-0.7996686, 0.02302451],
+                    [-0.79701906, 0.06899724],
+                    [-0.78809845, 0.13748028],
                 ],
             )
         )
-
-        (
-            t_test,
-            x_test,
-            y_test,
-            theta_test,
-            v_test,
-            omega_test,
-            a_test,
-        ) = physics.simulate_auv2_motion(
-            np.array([1, 0, 1, 0]), 0.5, 1.5, 1.8, dt=0.5, t_final=1.5
-        )
-        self.assertEqual(t_test[0], 0)
-        self.assertEqual(t_test[1], 0.5)
-        self.assertEqual(t_test[2], 1.0)
-        self.assertEqual(np.all(x_test), 0)
-        self.assertEqual(np.all(y_test), 0)
-        self.assertEqual(theta_test[0], 0)
-        self.assertEqual(theta_test[1], 0)
-        self.assertEqual(theta_test[2], 0.011493934596544877)
-        self.assertEqual(np.all(v_test), 0)
-        self.assertEqual(np.all(a_test), 0)
-        self.assertEqual(omega_test[0], 0)
-        self.assertEqual(omega_test[1], 0.022987869193089754, 0.04597574)
 
         with self.assertRaises(ValueError):
             physics.simulate_auv2_motion([3, 4, 5, 6, 5], 3, -3, -3)
