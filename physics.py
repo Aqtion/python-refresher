@@ -264,8 +264,8 @@ def simulate_auv2_motion(
 
         theta[i] = theta[i - 1] + omega[i] * dt
 
-        a_x[i] = calculate_auv2_acceleration(T, alpha, theta[i])[0]
-        a_y[i] = calculate_auv2_acceleration(T, alpha, theta[i])[1]
+        a_x[i] = calculate_auv2_acceleration(T, alpha, theta[i], mass)[0]
+        a_y[i] = calculate_auv2_acceleration(T, alpha, theta[i], mass)[1]
 
         v_x[i] = a_x[i] * dt + v_x[i - 1]
         v_y[i] = a_y[i] * dt + v_y[i - 1]
