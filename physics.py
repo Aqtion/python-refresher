@@ -279,17 +279,6 @@ def simulate_auv2_motion(
         v.append([v_x[i], v_y[i]])
         a.append([a_x[i], a_y[i]])
 
-    # print(t)
-    # print(x)
-    # print(y)
-    # print(theta)
-    # print(v_x)
-    # print(v_y)
-    # print(v)
-    # print(omega)
-    # print(a_x)
-    # print(a_y)
-    # print(a)
     return (t, x, y, theta, v, omega, a)
 
 
